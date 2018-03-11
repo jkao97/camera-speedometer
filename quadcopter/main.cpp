@@ -9,7 +9,7 @@
 #include <chrono>
 #include <thread>
 
-int calculateDistance(cv::Mat newImg, cv::Mat oldImg);
+double calculateDistance(cv::Mat newImg, cv::Mat oldImg);
 
 
 int main(int argc, char **argv) {

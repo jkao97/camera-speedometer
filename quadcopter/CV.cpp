@@ -7,7 +7,11 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv/nonfree/features2d.hpp>
 
-int calculateDistance(cv::Mat newImg, cv::Mat oldImg) {
+
+using namespace cv;
+double euDistance(cv::Point2f pt1, cv::Point2f pt2);
+
+double calculateDistance(cv::Mat newImg, cv::Mat oldImg) {
     
     SiftFeatureDetector detector; 
     SiftDescriptorExtractor extractor;
@@ -24,6 +28,24 @@ int calculateDistance(cv::Mat newImg, cv::Mat oldImg) {
     vector< DMatch > matches;
     matcher.match(descriptor_1, descriptor_2, matches);
 
+    double sumDist = 0;
+    unsigned int size = unsigned int (matches.size());
+    unsigned int totalPoints= 0;
 
-    return -1;
+    for (unsigned int i = 0; i < size; i++) {
+        if (matches[i].distance < 100) {
+            Point2f pt_1= keypoints2.at(matches[i].queryIdx).pt;
+	    Point2f pt_2 = keypoints1.at(matches[i].trainIdx).pt;
+	    sumDist += euDistance(pt_1 , pt_2);
+	    totalPoints++;
+	}
+    }
+	
+    double average = sumDist / totalPoints;
+
+    return average;
+}
+
+double euDistance(Point2f pt1, Point2f pt2) {
+	return sqrt(pow(abs(pt2.x - pt1.x), 2) + pow(abs(pt2.y - pt1.y), 2));
 }
