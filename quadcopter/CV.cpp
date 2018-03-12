@@ -15,7 +15,7 @@ double convertX(double pixel_dist, double camera_degree, double height, double i
 double calculateDistance(cv::Mat newImg, cv::Mat oldImg) {
     ORB detector = ORB(10, 1.0f, 3, 31, 0, 4, ORB::FAST_SCORE, 31);
 
-    vector<KeyPoint> keypoints_1, keypoints_2;
+    std::vector<KeyPoint> keypoints_1, keypoints_2;
     Mat descriptor_1, descripter_2;
 
     detector.detect(newImg, keypoints_1);
