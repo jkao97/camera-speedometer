@@ -5,7 +5,6 @@
 #include <opencv2/core.hpp>
 #include <opencv2/features2d.hpp>
 #include <opencv2/imgproc.hpp>
-#include <opencv/nonfree/features2d.hpp>
 #include <cmath>
 
 
@@ -14,19 +13,17 @@ double euDistance(cv::Point2f pt1, cv::Point2f pt2);
 double convertX(double pixel_dist, double camera_degree, double height, double img_width);
 
 double calculateDistance(cv::Mat newImg, cv::Mat oldImg) {
-    
-    SiftFeatureDetector detector; 
-    SiftDescriptorExtractor extractor;
+    ORB detector = ORB(10, 1.0f, 3, 31, 0, 4, ORB::FAST_SCORE, 31);
 
-    vector<KeyPoint> keypoints_1, keypoints_2;
+    std::vector<KeyPoint> keypoints_1, keypoints_2;
     Mat descriptor_1, descripter_2;
 
     detector.detect(newImg, keypoints_1);
     detector.detect(oldImg, keypoints_2);
-    extractor.compute(newImg, keypoints_1, descriptor_1);
-    extractor.compute(oldImg, keypoints_2, descriptor_2);
+    detector.compute(newImg, keypoints_1, descriptor_1);
+    detector.compute(oldImg, keypoints_2, descriptor_2);
 
-    BFMatcher matcher(NORM_L2);
+    BFMatcher matcher(NORM_HAMMING);
     vector< DMatch > matches;
     matcher.match(descriptor_1, descriptor_2, matches);
 
@@ -35,7 +32,7 @@ double calculateDistance(cv::Mat newImg, cv::Mat oldImg) {
     unsigned int totalPoints= 0;
 
     for (unsigned int i = 0; i < size; i++) {
-	if (matches[i].distance < 200) {
+	if (matches[i].distance < 20) {
             Point2f pt_1= keypoints2.at(matches[i].queryIdx).pt;
 	    Point2f pt_2 = keypoints1.at(matches[i].trainIdx).pt;
 	    sumDist += euDistance(pt_1 , pt_2);
