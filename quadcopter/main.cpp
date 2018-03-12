@@ -9,7 +9,12 @@
 #include <chrono>
 #include <thread>
 
-double calculateDistance(cv::Mat newImg, cv::Mat oldImg);
+double calculateDistance(std::vector<KeyPoint> new_key, 
+				std::vector <KeyPoint> old_key, 
+				Mat new_desc,
+				Mat old_desc);
+void descDetect(Mat img, std::vector<KeyPoint> key, cv::Mat desc);
+std::vector<KeyPoint> keyDetect(Mat img);
 
 
 int main(int argc, char **argv) {
