@@ -45,9 +45,18 @@ double calculateDistance(std::vector<KeyPoint> new_key,
     double sumDist = 0;
     unsigned int size = unsigned int (matches.size());
     unsigned int totalPoints= 0;
+    double min_dist = 100;
+    double second_min_dist;
+
+    for (int i = 0; i < int (matches.size()); i++){
+    	if (matches[i].distance < min_dist) {
+       	    min_dist = matches[i].distance;
+	    second_min_dist = min_dist;
+	}
+    }
 
     for (unsigned int i = 0; i < size; i++) {
-	if (matches[i].distance < 20) {
+	if (matches[i].distance < min(int (3 * second_min_dist), 100)) {
             Point2f pt_1= new_key.at(matches[i].queryIdx).pt;
 	    Point2f pt_2 = old_key.at(matches[i].trainIdx).pt;
 	    sumDist += euDistance(pt_1 , pt_2);
