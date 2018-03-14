@@ -52,8 +52,7 @@ int main(int argc, char **argv) {
         cam.grab();
         newTime = std::chrono::system_clock::now();
         cam.retrieve(image);
-        cv::imwrite("image.jpg", image);
-        return 0;
+        
         /*
         newFeatures = getFeatures(&image);
         distance = getDistance(newFeatures, oldFeatures);
