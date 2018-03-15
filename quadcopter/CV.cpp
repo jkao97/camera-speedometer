@@ -5,8 +5,8 @@
 #include <opencv2/core.hpp>
 #include <opencv2/features2d.hpp>
 #include <opencv2/imgproc.hpp>
+#include <opencv2/opencv.hpp>
 #include <cmath>
-
 
 using namespace cv;
 double euDistance(cv::Point2f pt1, cv::Point2f pt2);
@@ -14,21 +14,21 @@ double convertX(double pixel_dist, double camera_degree, double height, double i
 
 /* Returns keypoints of image */
 Mat descDetect(Mat img, std::vector<KeyPoint> key) {
-	ORB orb = ORB(10, 1.0f, 3, 31, 0, 4, ORB::FAST_SCORE, 31);
+	Ptr<ORB> orb = ORB::create(10, 1.0f, 3, 31, 0, 4, ORB::FAST_SCORE, 31);
 
 	Mat descriptors;
-	orb.compute(img, key, descriptors);
+	orb->compute(img, key, descriptors);
 
 	return descriptors;
 }
 
 /* Returns descriptors of image */
 std::vector<KeyPoint> keyDetect(Mat img) {
-	ORB orb = ORB(10, 1.0f, 3, 31, 0, 4, ORB::FAST_SCORE, 31);
+	Ptr<ORB> orb = ORB::create(10, 1.0f, 3, 31, 0, 4, ORB::FAST_SCORE, 31);
 
 	std::vector<KeyPoint> keypoints;
 
-	orb.detect(img, keypoints);
+	orb->detect(img, keypoints);
 	return keypoints;
 }
 
@@ -38,12 +38,12 @@ double calculateDistance(std::vector<KeyPoint> new_key,
 				Mat new_desc,
 				Mat old_desc) {
     
-    BFMatcher matcher(NORM_HAMMING);
-    vector< DMatch > matches;
-    matcher.match(new_desc, old_desc, matches);
+    Ptr<BFMatcher> matcher = BFMatcher::create(NORM_HAMMING);
+    std::vector< DMatch > matches;
+    matcher->match(new_desc, old_desc, matches);
 
     double sumDist = 0;
-    unsigned int size = unsigned int (matches.size());
+    unsigned int size = (unsigned int) (matches.size());
     unsigned int totalPoints= 0;
     double min_dist = 100;
     double second_min_dist;
