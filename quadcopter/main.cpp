@@ -8,11 +8,17 @@
 
 #include <chrono>
 #include <thread>
+#include <sstream>
 
 #include <raspicam/raspicam_cv.h>
 
 #include "CV.hpp"
 
+#include <SerialXbee.hpp>
+#include <ReceivePacket.hpp>
+#include <TransmitRequest.hpp>
+
+#define GCS_MAC 0x0
 
 static void setupCamera(raspicam::RaspiCam_Cv &cam)
 {
@@ -34,34 +40,47 @@ static void setupCamera(raspicam::RaspiCam_Cv &cam)
     }
 }
 
-int sendMessage(double speed) {
+int sendSpeed(double speed, XBEE::SerialXbee &xbee_interface) {
+    XBEE::TransmitRequest frame_gcs(GCS_MAC);
 
+    std::ostringstream strs;
+    strs << speed;
+    std::string str = strs.str();
+
+    frame_gcs.setData(str);
+    xbee_interface.ASyncWriteFrame(&frame_gcs);
 }
 
 int main(int argc, char **argv) {
 
     raspicam::RaspiCam_Cv cam;
-    std::chrono::time_point<std::chrono::system_clock> oldTime, newTime;
+    auto oldTime;
     cv::Mat image;
-    std::vector<cv::KeyPoint> oldFeatures, newFeatures;
+    std::vector<cv::KeyPoint> oldKeys, newKeys;
+    std::vector<cv::Mat> oldDescs, newDescs;
     double distance, speed;
+    unsigned int iterations = 0;
 
     setupCamera(cam);
+    cam.grab();
 
     while(1) {
         cam.grab();
-        newTime = std::chrono::system_clock::now();
+        auto newTime = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
         cam.retrieve(image);
         
-        /*
-        newFeatures = getFeatures(&image);
-        distance = getDistance(newFeatures, oldFeatures);
-
-        speed = distance / (newTime - oldTime);
-        sendMessage(speed);
+        newKeys = keyDetect(image);
+        newDescs = descDetect(image, newKeys);
+        
+        if(iterations) {
+            distance = calculateDistance(newKeys, oldKeys, newDescs, oldDescs);
+            speed = distance / ((newTime - oldTime) / 1000);
+            sendSpeed(speed);
+        }
 
         oldTime = newTime;
-        */
+        iterations++;
+        
     }
     return 0;
 }
