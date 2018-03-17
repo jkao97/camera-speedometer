@@ -63,7 +63,7 @@ double calculateDistance(std::vector<KeyPoint> new_key,
 	if (matches[i].distance < min(int (3 * second_min_dist), 100)) {
             Point2f pt_1= new_key.at(matches[i].queryIdx).pt;
 	    Point2f pt_2 = old_key.at(matches[i].trainIdx).pt;
-	    pixel_distances.push_back(euDistance(pt_1, pt_2);
+	    pixel_distances.push_back(euDistance(pt_1, pt_2));
 	    totalPoints++;
 	}
     }
