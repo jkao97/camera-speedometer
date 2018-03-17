@@ -20,19 +20,15 @@ double convertX(double pixel_dist, double camera_degree, double height, double i
 /* Returns keypoints of image */
 Mat descDetect(Mat img, std::vector<KeyPoint> key) {
 	Ptr<ORB> orb = ORB::create(10, 1.0f, 3, 31, 0, 4, ORB::FAST_SCORE, 31);
-
 	Mat descriptors;
 	orb->compute(img, key, descriptors);
-
 	return descriptors;
 }
 
 /* Returns descriptors of image */
 std::vector<KeyPoint> keyDetect(Mat img) {
 	Ptr<ORB> orb = ORB::create(10, 1.0f, 3, 31, 0, 4, ORB::FAST_SCORE, 31);
-
 	std::vector<KeyPoint> keypoints;
-
 	orb->detect(img, keypoints);
 	return keypoints;
 }
