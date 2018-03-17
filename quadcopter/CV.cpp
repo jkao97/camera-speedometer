@@ -42,8 +42,11 @@ double calculateDistance(std::vector<KeyPoint> new_key,
 				std::vector <KeyPoint> old_key, 
 				Mat new_desc,
 				Mat old_desc) {
-    
-	BFMatcher matcher(NORM_HAMMING);
+    if(old_key.size() == 0){
+    	return 0;
+    }
+
+    Ptr<BFMatcher> matcher = BFMatcher::create(NORM_HAMMING);
     std::vector< DMatch > matches;
     matcher.match(new_desc, old_desc, matches);
 
