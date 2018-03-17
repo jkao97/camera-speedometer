@@ -38,7 +38,7 @@ double calculateDistance(std::vector<KeyPoint> new_key,
 				std::vector <KeyPoint> old_key, 
 				Mat new_desc,
 				Mat old_desc) {
-    if(old_key.size() == 0){
+    if(old_key.size() == 0 || new_key.size() == 0){
     	return 0;
     }
 
