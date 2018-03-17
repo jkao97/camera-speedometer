@@ -50,7 +50,7 @@ double calculateDistance(std::vector<KeyPoint> new_key,
     unsigned int size = (unsigned int) (matches.size());
     unsigned int totalPoints= 0;
     double min_dist = 100;
-    double second_min_dist;
+    double second_min_dist = -1;
     std::vector< double > pixel_distances; 
 
     for (int i = 0; i < int (matches.size()); i++){
