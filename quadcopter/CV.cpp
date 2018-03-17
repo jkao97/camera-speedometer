@@ -38,30 +38,30 @@ double calculateDistance(std::vector<KeyPoint> new_key,
 				Mat new_desc,
 				Mat old_desc) {
     
-    Ptr<BFMatcher> matcher = BFMatcher::create(NORM_HAMMING);
+	BFMatcher matcher(NORM_HAMMING);
     std::vector< DMatch > matches;
-    matcher->match(new_desc, old_desc, matches);
+    matcher.match(new_desc, old_desc, matches);
 
     double sumDist = 0;
     unsigned int size = (unsigned int) (matches.size());
     unsigned int totalPoints= 0;
     double min_dist = 100;
-    double second_min_dist;
+    double second_min_dist = -1;
 
     for (int i = 0; i < int (matches.size()); i++){
     	if (matches[i].distance < min_dist) {
        	    min_dist = matches[i].distance;
-	    second_min_dist = min_dist;
-	}
+	    	second_min_dist = min_dist;
+		}
     }
 
     for (unsigned int i = 0; i < size; i++) {
-	if (matches[i].distance < min(int (3 * second_min_dist), 100)) {
-            Point2f pt_1= new_key.at(matches[i].queryIdx).pt;
-	    Point2f pt_2 = old_key.at(matches[i].trainIdx).pt;
-	    sumDist += euDistance(pt_1 , pt_2);
-	    totalPoints++;
-	}
+		if (matches[i].distance < min(int (3 * second_min_dist), 100)) {
+				Point2f pt_1= new_key.at(matches[i].queryIdx).pt;
+			Point2f pt_2 = old_key.at(matches[i].trainIdx).pt;
+			sumDist += euDistance(pt_1 , pt_2);
+			totalPoints++;
+		}
     }
 	
     double average = sumDist / totalPoints;
