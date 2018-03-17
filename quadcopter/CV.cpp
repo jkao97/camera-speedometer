@@ -71,6 +71,7 @@ double calculateDistance(std::vector<KeyPoint> new_key,
     std::sort(pixel_distances.begin(), pixel_distances.end());
     size = pixel_distances.size();
     double median = 0;
+
     if (size % 2 == 0) {
   	median = (pixel_distances.at(size / 2) + pixel_distances.at((size / 2) - 1)) / 2;
     }
