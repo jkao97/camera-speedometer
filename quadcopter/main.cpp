@@ -26,7 +26,7 @@
 #define SATURATION 50.0f
 #define GAIN 50.0f
 
-#define GCS_MAC 0x0
+#define GCS_MAC 0x0013A200409BD79C
 
 static void setupCamera(raspicam::RaspiCam_Cv &cam)
 {

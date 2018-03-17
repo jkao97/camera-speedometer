@@ -18,8 +18,9 @@ using namespace XBEE;
 using namespace std;
 
 void CallbackFunction(XBEE::Frame *item) {
+    XBEE::ReceivePacket *r_packet = dynamic_cast<XBEE::ReceivePacket *>(item);
     std::cout << "messaged received" << std::endl;
-    std::cout << "speed: " << item->GetData();
+    std::cout << "speed: " << r_packet->GetData();
 }
 
 int main(int argc, char* argv[]) {
